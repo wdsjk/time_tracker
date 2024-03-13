@@ -26,17 +26,23 @@ public class UserService {
                 request.getUsername()
         ));
 
+        log.info("INFO: User with username: %s successfully created".formatted(request.getUsername()));
         return "User successfully created";
     }
 
     @Transactional
     public String updateUser(UpdateUserRequest request) {
         User user = userRepository.findUserByUsername(request.getOldUsername()).orElseThrow(
-                () -> new UserNotFoundException("User with username: %s is not found".
-                        formatted(request.getOldUsername()))
+                () -> {
+                    log.error("ERROR: User with username: %s is not found".formatted(request.getOldUsername()));
+                    return new UserNotFoundException("User with username: %s is not found".
+                            formatted(request.getOldUsername()));
+                }
         );
         user.setUsername(request.getNewUsername());
 
+        log.info("INFO: Username %s successfully updated to username: %s"
+                .formatted(request.getOldUsername(), request.getNewUsername()));
         return "User successfully updated";
     }
 }

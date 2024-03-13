@@ -7,6 +7,6 @@ import wdsjk.project.timetrackerassignment.domain.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
-    @Query(value = "select * from usr where username=#{#username}", nativeQuery = true)
+//    @Query(value = "select * from usr where username='#{#username}'", nativeQuery = true)
     Optional<User> findUserByUsername(String username);
 }
