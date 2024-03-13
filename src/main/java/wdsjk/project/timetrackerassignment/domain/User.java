@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,11 +16,11 @@ public class User {
     @Column(nullable = false)
     private String id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @OneToMany(mappedBy = "user")
-    private Set<Task> tasks;
+    private List<Task> tasks;
 
     public User(String id, String username) {
         this.id = id;

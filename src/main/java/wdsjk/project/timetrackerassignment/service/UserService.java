@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import wdsjk.project.timetrackerassignment.domain.Task;
 import wdsjk.project.timetrackerassignment.domain.User;
 import wdsjk.project.timetrackerassignment.dto.NewUserRequest;
 import wdsjk.project.timetrackerassignment.dto.UpdateUserRequest;
 import wdsjk.project.timetrackerassignment.exception.UserNotFoundException;
 import wdsjk.project.timetrackerassignment.repository.UserRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -44,5 +46,24 @@ public class UserService {
         log.info("INFO: Username %s successfully updated to username: %s"
                 .formatted(request.getOldUsername(), request.getNewUsername()));
         return "User successfully updated";
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findUserByUsername(username).orElseThrow(
+                () -> {
+                    log.error("ERROR: User with username: %s is not found".formatted(username));
+                    return new UserNotFoundException("User with username: %s is not found".
+                            formatted(username));
+                }
+        );
+    }
+
+    @Transactional
+    public void addTaskToUser(Task task, User user) {
+        if (user.getTasks().isEmpty()) {
+            user.setTasks(List.of(task));
+        } else {
+            user.getTasks().add(task);
+        }
     }
 }
