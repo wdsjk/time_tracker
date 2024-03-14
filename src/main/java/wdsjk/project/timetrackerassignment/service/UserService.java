@@ -8,13 +8,17 @@ import lombok.extern.slf4j.Slf4j;
 
 import wdsjk.project.timetrackerassignment.domain.Task;
 import wdsjk.project.timetrackerassignment.domain.User;
+
 import wdsjk.project.timetrackerassignment.dto.NewUserRequest;
+import wdsjk.project.timetrackerassignment.dto.ShowTasksTimeRequest;
+import wdsjk.project.timetrackerassignment.dto.ShowTasksTimeResponse;
 import wdsjk.project.timetrackerassignment.dto.UpdateUserRequest;
+
 import wdsjk.project.timetrackerassignment.exception.UserNotFoundException;
 import wdsjk.project.timetrackerassignment.repository.UserRepository;
 
-import java.util.List;
-import java.util.UUID;
+import java.time.Duration;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -65,5 +69,31 @@ public class UserService {
         } else {
             user.getTasks().add(task);
         }
+    }
+
+    public Collection<ShowTasksTimeResponse> getSummary(ShowTasksTimeRequest request) {
+        User user = userRepository.findUserByUsername(request.getUsername()).orElseThrow(
+                () -> {
+                    log.error("ERROR: User with username: %s is not found".formatted(request.getUsername()));
+                    return new UserNotFoundException("User with username: %s is not found".
+                            formatted(request.getUsername()));
+                }
+        );
+
+        log.info("INFO: Summary %s's time spent on tasks successfully got".formatted(user.getUsername()));
+        return user.getTasks().stream()
+            .filter(task ->
+                    null != task.getFinishedAt() &&
+                    task.getStartedAt().after(request.getFrom()) &&
+                    task.getFinishedAt().before(request.getTo()))
+            .map(
+                    task -> new ShowTasksTimeResponse(
+                            task.getName(),
+                            Duration.between(task.getStartedAt().toInstant(), task.getFinishedAt().toInstant()).toHoursPart() +
+                            ":" +
+                            Duration.between(task.getStartedAt().toInstant(), task.getFinishedAt().toInstant()).toMinutesPart())
+            ).sorted(
+                    Comparator.comparing(ShowTasksTimeResponse::spentTime)
+            ).toList().reversed();
     }
 }

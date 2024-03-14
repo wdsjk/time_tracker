@@ -7,9 +7,13 @@ import org.springframework.stereotype.Service;
 
 import wdsjk.project.timetrackerassignment.domain.Task;
 import wdsjk.project.timetrackerassignment.domain.User;
+
 import wdsjk.project.timetrackerassignment.dto.StartTaskRequest;
-import wdsjk.project.timetrackerassignment.dto.StopTaskRequest;
-import wdsjk.project.timetrackerassignment.exception.TaskNotFound;
+import wdsjk.project.timetrackerassignment.dto.FinishTaskRequest;
+
+import wdsjk.project.timetrackerassignment.exception.TaskAlreadyFinishedException;
+import wdsjk.project.timetrackerassignment.exception.TaskNotFoundException;
+
 import wdsjk.project.timetrackerassignment.repository.TaskRepository;
 
 import java.util.Date;
@@ -41,11 +45,15 @@ public class TaskService {
     }
 
     @Transactional
-    public String stopTask(StopTaskRequest request) {
+    public String finishTask(FinishTaskRequest request) {
         User user = userService.getUserByUsername(request.getUsername());
         Task task = taskRepository.findTaskByName(request.getName()).orElseThrow(
-                () -> new TaskNotFound("Task with name: %s is not found".formatted(request.getName()))
+                () -> new TaskNotFoundException("Task with name: %s is not found".formatted(request.getName()))
         );
+
+        if (null != task.getFinishedAt()) {
+            throw new TaskAlreadyFinishedException("Task %s is already finished!".formatted(task.getName()));
+        }
 
         task.setFinishedAt(new Date());
         user.getTasks().forEach(

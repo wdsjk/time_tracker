@@ -12,10 +12,10 @@ import java.util.Date;
 @Table(name = "tasks")
 public class Task {
     @Id
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Column(nullable = false)

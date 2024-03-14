@@ -6,12 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import wdsjk.project.timetrackerassignment.exception.TaskNotFound;
+import wdsjk.project.timetrackerassignment.exception.TaskAlreadyFinishedException;
+import wdsjk.project.timetrackerassignment.exception.TaskNotFoundException;
 
 @RestControllerAdvice
 public class TaskControllerAdvice {
-    @ExceptionHandler(TaskNotFound.class)
-    public ResponseEntity<String> handleTaskNotFound(TaskNotFound e) {
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<String> handleTaskNotFound(TaskNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).body(e.getMessage());
+    }
+
+    @ExceptionHandler(TaskAlreadyFinishedException.class)
+    public ResponseEntity<String> handleTaskAlreadyFinishedException(TaskAlreadyFinishedException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(e.getMessage());
     }
 }

@@ -13,10 +13,10 @@ import java.util.List;
 @Table(name = "usr")
 public class User {
     @Id
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @OneToMany(mappedBy = "user")

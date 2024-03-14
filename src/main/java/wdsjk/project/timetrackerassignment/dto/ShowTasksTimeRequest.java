@@ -3,11 +3,14 @@ package wdsjk.project.timetrackerassignment.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
-public class StartTaskRequest {
+public class ShowTasksTimeRequest {
     @NotBlank(message = "Username can't be blank!")
     private String username;
 
-    @NotBlank(message = "Task name can't be blank!")
-    private String name;
+    private Date from;
+
+    private Date to;
 }
