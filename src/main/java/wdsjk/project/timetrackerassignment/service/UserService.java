@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import wdsjk.project.timetrackerassignment.domain.Task;
 import wdsjk.project.timetrackerassignment.domain.User;
 
-import wdsjk.project.timetrackerassignment.dto.NewUserRequest;
-import wdsjk.project.timetrackerassignment.dto.ShowTasksTimeRequest;
-import wdsjk.project.timetrackerassignment.dto.ShowTasksTimeResponse;
-import wdsjk.project.timetrackerassignment.dto.UpdateUserRequest;
+import wdsjk.project.timetrackerassignment.dto.*;
 
 import wdsjk.project.timetrackerassignment.exception.UserNotFoundException;
 import wdsjk.project.timetrackerassignment.repository.UserRepository;
@@ -71,7 +68,7 @@ public class UserService {
         }
     }
 
-    public Collection<ShowTasksTimeResponse> getSummary(ShowTasksTimeRequest request) {
+    public Collection<ShowTaskTimeResponse> getSummary(TimeRequest request) {
         User user = userRepository.findUserByUsername(request.getUsername()).orElseThrow(
                 () -> {
                     log.error("ERROR: User with username: %s is not found".formatted(request.getUsername()));
@@ -80,20 +77,25 @@ public class UserService {
                 }
         );
 
-        log.info("INFO: Summary %s's time spent on tasks successfully got".formatted(user.getUsername()));
+        log.info("INFO: Summary %s's time spent on tasks successfully obtained".formatted(user.getUsername()));
         return user.getTasks().stream()
             .filter(task ->
                     null != task.getFinishedAt() &&
                     task.getStartedAt().after(request.getFrom()) &&
                     task.getFinishedAt().before(request.getTo()))
             .map(
-                    task -> new ShowTasksTimeResponse(
+                    task -> new ShowTaskTimeResponse(
                             task.getName(),
                             Duration.between(task.getStartedAt().toInstant(), task.getFinishedAt().toInstant()).toHoursPart() +
                             ":" +
                             Duration.between(task.getStartedAt().toInstant(), task.getFinishedAt().toInstant()).toMinutesPart())
             ).sorted(
-                    Comparator.comparing(ShowTasksTimeResponse::spentTime)
+                    Comparator.comparing(ShowTaskTimeResponse::spentTime)
             ).toList().reversed();
+    }
+
+    public Collection<ShowTimeTaskResponse> getWorkingHours(TimeRequest request) {
+        // TODO: to do
+        return null;
     }
 }

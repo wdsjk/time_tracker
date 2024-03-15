@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import wdsjk.project.timetrackerassignment.dto.ShowTasksTimeRequest;
-import wdsjk.project.timetrackerassignment.dto.ShowTasksTimeResponse;
+import wdsjk.project.timetrackerassignment.dto.TimeRequest;
+import wdsjk.project.timetrackerassignment.dto.ShowTaskTimeResponse;
 
+import wdsjk.project.timetrackerassignment.dto.ShowTimeTaskResponse;
 import wdsjk.project.timetrackerassignment.service.TaskService;
 import wdsjk.project.timetrackerassignment.service.UserService;
 
@@ -28,9 +29,16 @@ public class SummaryController {
     private final UserService userService;
 
     @GetMapping("/task-time")
-    public ResponseEntity<Collection<ShowTasksTimeResponse>> showTasksTime(@Valid @RequestBody ShowTasksTimeRequest request) {
+    public ResponseEntity<Collection<ShowTaskTimeResponse>> showTaskTime(@Valid @RequestBody TimeRequest request) {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(
                 userService.getSummary(request)
+        );
+    }
+
+    @GetMapping("/time-task")
+    public ResponseEntity<Collection<ShowTimeTaskResponse>> showTimeTask(@Valid @RequestBody TimeRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(
+                userService.getWorkingHours(request)
         );
     }
 }
