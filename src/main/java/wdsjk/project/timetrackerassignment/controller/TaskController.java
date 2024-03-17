@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import wdsjk.project.timetrackerassignment.dto.StartTaskRequest;
 import wdsjk.project.timetrackerassignment.dto.FinishTaskRequest;
-import wdsjk.project.timetrackerassignment.service.TaskService;
+import wdsjk.project.timetrackerassignment.service.impl.TaskServiceImpl;
 
 @RestController
 @RequestMapping("/api/v1/task")
 @RequiredArgsConstructor
 public class TaskController {
-    private final TaskService taskService;
+    private final TaskServiceImpl taskService;
 
     @PostMapping("/start")
     public ResponseEntity<String> startTask(@Valid @RequestBody StartTaskRequest request) {

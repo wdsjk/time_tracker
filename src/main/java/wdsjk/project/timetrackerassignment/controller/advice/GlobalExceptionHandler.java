@@ -27,14 +27,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<String> handleSQLException(SQLException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(
-                e.getMessage() // I'm lazy to handle it in a better way
+                "Field you're trying to proceed is already exists!" // hard relation because app is small and
+                                                                    // this is only reason why the exception may occur
+                // TODO: IN THE FUTURE THIS METHOD MUST BE CHANGED
         );
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(
-                e.getMessage() // Also this one
+                "Request is invalid!" // hard relation because app is small and
+                                      // this is only reason why the exception may occur
+                // TODO: IN THE FUTURE THIS METHOD MUST BE CHANGED
         );
     }
 }

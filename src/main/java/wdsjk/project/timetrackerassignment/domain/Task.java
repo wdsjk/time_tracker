@@ -1,6 +1,7 @@
 package wdsjk.project.timetrackerassignment.domain;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

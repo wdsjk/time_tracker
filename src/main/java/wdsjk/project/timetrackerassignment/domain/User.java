@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class User {
     private String username;
 
     @OneToMany(mappedBy = "user")
-    @ToString.Exclude
     private List<Task> tasks;
 
     public User(String id, String username) {

@@ -17,7 +17,7 @@ import wdsjk.project.timetrackerassignment.dto.ShowTaskTimeResponse;
 
 import wdsjk.project.timetrackerassignment.dto.ShowTimeTaskResponse;
 import wdsjk.project.timetrackerassignment.dto.WorkedResponse;
-import wdsjk.project.timetrackerassignment.service.UserService;
+import wdsjk.project.timetrackerassignment.service.impl.UserServiceImpl;
 
 import java.util.Collection;
 
@@ -25,7 +25,7 @@ import java.util.Collection;
 @RequestMapping("/api/v1/summary")
 @RequiredArgsConstructor
 public class SummaryController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @GetMapping("/task-time")
     public ResponseEntity<Collection<ShowTaskTimeResponse>> showTaskTime(@Valid @RequestBody TimeRequest request) {
