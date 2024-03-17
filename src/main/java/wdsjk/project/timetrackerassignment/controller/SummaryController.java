@@ -16,7 +16,7 @@ import wdsjk.project.timetrackerassignment.dto.TimeRequest;
 import wdsjk.project.timetrackerassignment.dto.ShowTaskTimeResponse;
 
 import wdsjk.project.timetrackerassignment.dto.ShowTimeTaskResponse;
-import wdsjk.project.timetrackerassignment.service.TaskService;
+import wdsjk.project.timetrackerassignment.dto.WorkedResponse;
 import wdsjk.project.timetrackerassignment.service.UserService;
 
 import java.util.Collection;
@@ -25,7 +25,6 @@ import java.util.Collection;
 @RequestMapping("/api/v1/summary")
 @RequiredArgsConstructor
 public class SummaryController {
-    private final TaskService taskService;
     private final UserService userService;
 
     @GetMapping("/task-time")
@@ -39,6 +38,13 @@ public class SummaryController {
     public ResponseEntity<Collection<ShowTimeTaskResponse>> showTimeTask(@Valid @RequestBody TimeRequest request) {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(
                 userService.getWorkingHours(request)
+        );
+    }
+
+    @GetMapping("/worked")
+    public ResponseEntity<WorkedResponse> showWorked (@Valid @RequestBody TimeRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(
+                userService.getWorked(request)
         );
     }
 }

@@ -14,8 +14,10 @@ import wdsjk.project.timetrackerassignment.dto.FinishTaskRequest;
 import wdsjk.project.timetrackerassignment.exception.TaskAlreadyFinishedException;
 import wdsjk.project.timetrackerassignment.exception.TaskNotFoundException;
 
+import wdsjk.project.timetrackerassignment.exception.UserHasNoSuchTaskException;
 import wdsjk.project.timetrackerassignment.repository.TaskRepository;
 
+import java.time.Duration;
 import java.util.*;
 
 @Service
@@ -47,10 +49,22 @@ public class TaskService {
     public String finishTask(FinishTaskRequest request) {
         User user = userService.getUserByUsername(request.getUsername());
         Task task = taskRepository.findTaskByName(request.getName()).orElseThrow(
-                () -> new TaskNotFoundException("Task with name: %s is not found".formatted(request.getName()))
+                () -> {
+                    log.error("ERROR: Task with name: %s is not found!".formatted(request.getName()));
+                    return new TaskNotFoundException("Task with name: %s is not found!".formatted(request.getName()));
+                }
         );
 
+        if (!(task.getUser().getUsername()).equals(request.getUsername())) {
+            log.error("ERROR: User %s hasn't got such task: %s".formatted(request.getUsername(), request.getName()));
+            throw new UserHasNoSuchTaskException("User %s hasn't got such task: %s".formatted(
+                    request.getUsername(),
+                    request.getName()
+            ));
+        }
+
         if (null != task.getFinishedAt()) {
+            log.error("ERROR: Task %s is already finished!".formatted(task.getName()));
             throw new TaskAlreadyFinishedException("Task %s is already finished!".formatted(task.getName()));
         }
 
@@ -65,5 +79,22 @@ public class TaskService {
 
         log.info("INFO: Task with name: %s successfully finished".formatted(request.getName()));
         return "Task successfully finished";
+    }
+
+    public String getSpentTimeOnTask(String name) {
+        Task task = taskRepository.findTaskByName(name).orElseThrow(
+                () -> {
+                    log.error("ERROR: Task with name: %s is not found!".formatted(name));
+                    return new TaskNotFoundException("Task with name: %s is not found!".formatted(name));
+                }
+        );
+
+        return Duration.between(task.getStartedAt().toInstant(), task.getFinishedAt().toInstant()).toHoursPart()
+                + ":" +
+                Duration.between(task.getStartedAt().toInstant(), task.getFinishedAt().toInstant()).toMinutesPart();
+    }
+
+    public boolean filterTaskByTime(Task task, Date from, Date to) {
+        return null != task.getFinishedAt() && task.getStartedAt().after(from) && task.getFinishedAt().before(to);
     }
 }

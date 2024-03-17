@@ -14,7 +14,7 @@ import wdsjk.project.timetrackerassignment.dto.*;
 import wdsjk.project.timetrackerassignment.exception.UserNotFoundException;
 import wdsjk.project.timetrackerassignment.repository.UserRepository;
 
-import java.time.Duration;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -22,6 +22,7 @@ import java.util.*;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final TaskService taskService;
 
     public String createNewUser(NewUserRequest request) {
         userRepository.save(new User(
@@ -31,6 +32,16 @@ public class UserService {
 
         log.info("INFO: User with username: %s successfully created".formatted(request.getUsername()));
         return "User successfully created";
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findUserByUsername(username).orElseThrow(
+                () -> {
+                    log.error("ERROR: User with username: %s is not found".formatted(username));
+                    return new UserNotFoundException("User with username: %s is not found".
+                            formatted(username));
+                }
+        );
     }
 
     @Transactional
@@ -49,16 +60,6 @@ public class UserService {
         return "User successfully updated";
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findUserByUsername(username).orElseThrow(
-                () -> {
-                    log.error("ERROR: User with username: %s is not found".formatted(username));
-                    return new UserNotFoundException("User with username: %s is not found".
-                            formatted(username));
-                }
-        );
-    }
-
     @Transactional
     public void addTaskToUser(Task task, User user) {
         if (user.getTasks().isEmpty()) {
@@ -69,33 +70,59 @@ public class UserService {
     }
 
     public Collection<ShowTaskTimeResponse> getSummary(TimeRequest request) {
-        User user = userRepository.findUserByUsername(request.getUsername()).orElseThrow(
-                () -> {
-                    log.error("ERROR: User with username: %s is not found".formatted(request.getUsername()));
-                    return new UserNotFoundException("User with username: %s is not found".
-                            formatted(request.getUsername()));
-                }
-        );
+        User user = this.getUserByUsername(request.getUsername());
 
         log.info("INFO: Summary %s's time spent on tasks successfully obtained".formatted(user.getUsername()));
         return user.getTasks().stream()
-            .filter(task ->
-                    null != task.getFinishedAt() &&
-                    task.getStartedAt().after(request.getFrom()) &&
-                    task.getFinishedAt().before(request.getTo()))
+            .filter(task -> taskService.filterTaskByTime(task, request.getFrom(), request.getTo()))
             .map(
                     task -> new ShowTaskTimeResponse(
                             task.getName(),
-                            Duration.between(task.getStartedAt().toInstant(), task.getFinishedAt().toInstant()).toHoursPart() +
-                            ":" +
-                            Duration.between(task.getStartedAt().toInstant(), task.getFinishedAt().toInstant()).toMinutesPart())
+                            taskService.getSpentTimeOnTask(task.getName())
+                    )
             ).sorted(
                     Comparator.comparing(ShowTaskTimeResponse::spentTime)
             ).toList().reversed();
     }
 
     public Collection<ShowTimeTaskResponse> getWorkingHours(TimeRequest request) {
-        // TODO: to do
-        return null;
+        User user = this.getUserByUsername(request.getUsername());
+
+        log.info("INFO: Summary %s's time spent in the time from %s to %s successfully obtained"
+                .formatted(
+                        user.getUsername(),
+                        request.getFrom(),
+                        request.getTo()
+                )
+        );
+        return user.getTasks().stream()
+                .filter(task -> taskService.filterTaskByTime(task, request.getFrom(), request.getTo()))
+                .map(
+                        task -> new ShowTimeTaskResponse(
+                                Arrays.stream(SimpleDateFormat.getDateInstance().format(task.getStartedAt().getTime()).split(","))
+                                        .findFirst().orElse(null) // never will be null because of the checking above
+                                    + ", " + taskService.getSpentTimeOnTask(task.getName()),
+                                task.getName()
+                        )
+                ).toList();
+    }
+
+    public WorkedResponse getWorked(TimeRequest request) {
+        User user = this.getUserByUsername(request.getUsername());
+
+        List<String> timeOnEachTask = user.getTasks().stream()
+            .filter(task -> taskService.filterTaskByTime(task, request.getFrom(), request.getTo()))
+            .map(task -> taskService.getSpentTimeOnTask(task.getName()))
+            .toList();
+
+        int hours = 0;
+        int minutes = 0;
+
+        for (String time : timeOnEachTask) {
+            hours += Integer.parseInt(time.substring(0, time.indexOf(':')));
+            minutes += Integer.parseInt(time.substring(time.indexOf(':')+1));
+        }
+
+        return new WorkedResponse(hours + ":" + minutes);
     }
 }
