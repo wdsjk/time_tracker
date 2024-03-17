@@ -8,15 +8,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import wdsjk.project.timetrackerassignment.dto.UserRequest;
-import wdsjk.project.timetrackerassignment.dto.UpdateUserRequest;
-import wdsjk.project.timetrackerassignment.service.impl.UserServiceImpl;
+import wdsjk.project.timetrackerassignment.dto.user.UserRequest;
+import wdsjk.project.timetrackerassignment.dto.user.UpdateUserRequest;
+import wdsjk.project.timetrackerassignment.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@Valid @RequestBody UserRequest request) {

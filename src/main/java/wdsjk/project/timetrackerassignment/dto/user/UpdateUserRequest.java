@@ -1,4 +1,4 @@
-package wdsjk.project.timetrackerassignment.dto;
+package wdsjk.project.timetrackerassignment.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

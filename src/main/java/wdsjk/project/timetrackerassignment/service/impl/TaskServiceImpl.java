@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import wdsjk.project.timetrackerassignment.domain.Task;
 import wdsjk.project.timetrackerassignment.domain.User;
 
-import wdsjk.project.timetrackerassignment.dto.StartTaskRequest;
-import wdsjk.project.timetrackerassignment.dto.FinishTaskRequest;
+import wdsjk.project.timetrackerassignment.dto.task.StartTaskRequest;
+import wdsjk.project.timetrackerassignment.dto.task.FinishTaskRequest;
 
-import wdsjk.project.timetrackerassignment.exception.TaskAlreadyFinishedException;
-import wdsjk.project.timetrackerassignment.exception.TaskNotFoundException;
+import wdsjk.project.timetrackerassignment.exception.task.TaskAlreadyFinishedException;
+import wdsjk.project.timetrackerassignment.exception.task.TaskNotFoundException;
 
-import wdsjk.project.timetrackerassignment.exception.UserHasNoSuchTaskException;
+import wdsjk.project.timetrackerassignment.exception.user.UserHasNoSuchTaskException;
 import wdsjk.project.timetrackerassignment.repository.TaskRepository;
 
 import wdsjk.project.timetrackerassignment.service.TaskService;

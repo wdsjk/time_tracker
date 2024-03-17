@@ -3,8 +3,8 @@ package wdsjk.project.timetrackerassignment.service;
 import wdsjk.project.timetrackerassignment.domain.Task;
 import wdsjk.project.timetrackerassignment.domain.User;
 
-import wdsjk.project.timetrackerassignment.dto.FinishTaskRequest;
-import wdsjk.project.timetrackerassignment.dto.StartTaskRequest;
+import wdsjk.project.timetrackerassignment.dto.task.FinishTaskRequest;
+import wdsjk.project.timetrackerassignment.dto.task.StartTaskRequest;
 
 import java.util.Date;
 

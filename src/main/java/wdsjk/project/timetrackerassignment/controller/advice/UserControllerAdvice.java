@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import wdsjk.project.timetrackerassignment.exception.UserNotFoundException;
+import wdsjk.project.timetrackerassignment.exception.user.UserNotFoundException;
 
 @RestControllerAdvice
 public class UserControllerAdvice {

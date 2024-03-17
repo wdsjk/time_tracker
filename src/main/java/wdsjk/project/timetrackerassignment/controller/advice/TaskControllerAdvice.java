@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import wdsjk.project.timetrackerassignment.exception.TaskAlreadyFinishedException;
-import wdsjk.project.timetrackerassignment.exception.TaskNotFoundException;
-import wdsjk.project.timetrackerassignment.exception.UserHasNoSuchTaskException;
+import wdsjk.project.timetrackerassignment.exception.task.TaskAlreadyFinishedException;
+import wdsjk.project.timetrackerassignment.exception.task.TaskNotFoundException;
+import wdsjk.project.timetrackerassignment.exception.user.UserHasNoSuchTaskException;
 
 @RestControllerAdvice
 public class TaskControllerAdvice {

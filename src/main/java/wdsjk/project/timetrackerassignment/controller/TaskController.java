@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import wdsjk.project.timetrackerassignment.dto.StartTaskRequest;
-import wdsjk.project.timetrackerassignment.dto.FinishTaskRequest;
-import wdsjk.project.timetrackerassignment.service.impl.TaskServiceImpl;
+import wdsjk.project.timetrackerassignment.dto.task.StartTaskRequest;
+import wdsjk.project.timetrackerassignment.dto.task.FinishTaskRequest;
+import wdsjk.project.timetrackerassignment.service.TaskService;
 
 @RestController
 @RequestMapping("/api/v1/task")
 @RequiredArgsConstructor
 public class TaskController {
-    private final TaskServiceImpl taskService;
+    private final TaskService taskService;
 
     @PostMapping("/start")
     public ResponseEntity<String> startTask(@Valid @RequestBody StartTaskRequest request) {
