@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import wdsjk.project.timetrackerassignment.domain.Task;
 import wdsjk.project.timetrackerassignment.domain.User;
 
-import wdsjk.project.timetrackerassignment.dto.task.StartTaskRequest;
-import wdsjk.project.timetrackerassignment.dto.task.FinishTaskRequest;
+import wdsjk.project.timetrackerassignment.dto.task.TaskRequest;
 
 import wdsjk.project.timetrackerassignment.exception.task.TaskAlreadyFinishedException;
 import wdsjk.project.timetrackerassignment.exception.task.TaskNotFoundException;
@@ -30,7 +29,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserService userService;
 
-    public String startTask(StartTaskRequest request) {
+    public String startTask(TaskRequest request) {
         User user = userService.getUserByUsername(request.getUsername());
 
         Task task = new Task(
@@ -49,7 +48,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Transactional
-    public String finishTask(FinishTaskRequest request) {
+    public String finishTask(TaskRequest request) {
         User user = userService.getUserByUsername(request.getUsername());
         Task task = taskRepository.findTaskByName(request.getName()).orElseThrow(
                 () -> {

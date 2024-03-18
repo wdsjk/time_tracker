@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class StartTaskRequest {
+public class TaskRequest {
     @NotBlank(message = "Username can't be blank!")
     private String username;
 
