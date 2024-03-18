@@ -29,7 +29,7 @@
 
 - #### Updates user
 
-`Request: PATCH {BASE_URL}/user/update RequestBody={"oldUsername": "<oldUsername>", "newUsername: "<newUsername>"}`
+`Request: PATCH {BASE_URL}/user/update RequestBody={"oldUsername": "<oldUsername>", "newUsername": "<newUsername>"}`
 
 `Response: 200 OK "User successfully updated, 400 BAD_REQUEST "Username can't be blank!", 404 NOT_FOUND "User with username: <username> is not found"`
 
