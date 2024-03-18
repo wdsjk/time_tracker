@@ -21,7 +21,7 @@
 ## What this project can do
 
 ### Endpoints with `BASE_URL=http://localhost:8080/api/v1`:
-- #### Creates user with
+- #### Creates user
 
 `Request: POST {BASE_URL}/user/create RequestBody={"username": "<username>"}`
 
